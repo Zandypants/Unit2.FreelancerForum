@@ -44,18 +44,19 @@ function capitalize(word) {
 }
 
 /**
- * Replaces li elements under a given ul with new elements derived from given array
- * @param {Node} ul unordered list to add new li tags to
- * @param {Array} contents to fill each li tag with
+ * Replaces elements under a given node with new elements derived from given contents and tag
+ * @param {Node} node to add new html elements to
+ * @param {Array} contents to fill each element with
+ * @param {string} tag (html) for element creation
  */
-function displayList(ul, contents) {
+function replaceChildren(node, contents, tag) {
   const elements = contents.map((content) => {
-    const newElement = document.createElement("li");
+    const newElement = document.createElement(tag);
     newElement.textContent = content;
     return newElement;
   });
 
-  ul.replaceChildren(...elements);
+  node.replaceChildren(...elements);
 }
 
 /** Translates javascript data into html in order to display on page */
@@ -67,6 +68,6 @@ function render() {
       if (key === "price") contents[i] = "$" + contents[i];
     }
 
-    displayList(unorderedLists[key], contents);
+    replaceChildren(unorderedLists[key], contents, "li");
   }
 }
