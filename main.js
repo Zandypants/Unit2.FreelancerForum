@@ -1,3 +1,6 @@
+/* State */
+
+let freelancersDisplayed = 3;
 const freelancers = [
   { name: "Alice", occupation: "Writer", price: 30, },
   { name: "Bob", occupation: "Teacher", price: 50, },
@@ -7,3 +10,34 @@ const freelancers = [
 ];
 
 console.log(freelancers);
+
+const unorderedLists = {};
+for(key in freelancers[0]) {
+  const ul = document.querySelector(`#freelancer${capitalize(key)}s > ul`);
+  if (!ul) {
+    console.log(`Couldn't find section > list for key ${key}`);
+    continue;
+  }
+
+  unorderedLists[key] = ul;
+}
+console.log(unorderedLists);
+
+
+// const freelancerNameList = document.querySelectorAll("#freelancerNames > ul");
+// console.log(freelancerNameList);
+
+
+/**
+ * Returns a copy of the input word with the first letter capitalized
+ * @param {string} word to be capitalized (first letter)
+ * @returns {string} capitalized word
+ */
+function capitalize(word) {
+  // validation
+  if (typeof(word) !== "string" || word.length < 1) 
+    return "";
+
+  return word[0].toUpperCase() + word.slice(1);
+}
+
