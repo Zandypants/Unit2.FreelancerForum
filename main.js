@@ -23,6 +23,8 @@ for(key in freelancers[0]) {
 }
 console.log(unorderedLists);
 
+render();
+
 
 // const freelancerNameList = document.querySelectorAll("#freelancerNames > ul");
 // console.log(freelancerNameList);
@@ -41,3 +43,30 @@ function capitalize(word) {
   return word[0].toUpperCase() + word.slice(1);
 }
 
+/**
+ * Replaces li elements under a given ul with new elements derived from given array
+ * @param {Node} ul unordered list to add new li tags to
+ * @param {Array} contents to fill each li tag with
+ */
+function displayList(ul, contents) {
+  const elements = contents.map((content) => {
+    const newElement = document.createElement("li");
+    newElement.textContent = content;
+    return newElement;
+  });
+
+  ul.replaceChildren(...elements);
+}
+
+/** Translates javascript data into html in order to display on page */
+function render() {
+  for(key in unorderedLists) {
+    const contents = [];
+    for (let i = 0; i < freelancersDisplayed; i++) {
+      contents.push(freelancers[i][key]);
+      if (key === "price") contents[i] = "$" + contents[i];
+    }
+
+    displayList(unorderedLists[key], contents);
+  }
+}
