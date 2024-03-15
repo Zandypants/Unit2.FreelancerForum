@@ -50,10 +50,29 @@ function capitalize(word) {
   return word[0].toUpperCase() + word.slice(1);
 }
 
+/**
+ * Returns a random integer between min and max
+ * expects integers, but will convert decimals to integers before randomization
+ * @param {number} min (inclusive) integer
+ * @param {number} max (exclusive) integer
+ * @returns {number} random integer between min and max, NaN with bad arguments or min with bad range
+ */
 function randomInt(min, max) {
-  // validation TODO
+  // validation
+  if (isNaN(min) || isNaN(max)) return NaN;
+  if (max < min) return Math.round(min);
+  // convert to integer before randomizing, for more reliable integer distribution
+  min = Math.floor(min);
+  max = Math.ceil(max);
+
   return Math.floor(Math.random() * (max - min) + min);
 }
+
+/**
+ * Return a random element from an array, with even distribution across range
+ * @param {Array} array to get random element from
+ * @returns {any} element in array, or null with bad argument
+ */
 function randomElement(array) {
   // validation
   if (!Array.isArray(array)) return null;
@@ -129,6 +148,10 @@ function generateUniqueFreelancerName() {
   return tryRandomName;
 }
 
+/**
+ * Randomly generates a new freelancer object
+ * @returns {object} freelancer {name: string, occupation: string, price: number}
+ */
 function generateFreelancer() {
   const freelancer = {};
   
@@ -139,6 +162,10 @@ function generateFreelancer() {
   return freelancer;
 }
 
+/**
+ * Adds one or more randomly generated freelancer objects to the stored list of freelancers, then updates DOM (also enforces maximum freelancer amount)
+ * @param {number} amount of freelancers to add
+ */
 function addFreeLancers(amount) {
   for (let i = 0; i < amount; i++) {
     if (freelancers.length >= maxFreelancers) {
@@ -152,6 +179,10 @@ function addFreeLancers(amount) {
   render();
 }
 
+/**
+ * Adds one freelancer
+ * Helper function for supplying the interval callback
+ */
 function addFreeLancer() {
   addFreeLancers(1);
 }
