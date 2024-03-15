@@ -1,6 +1,6 @@
 // State
 const stateKeys = ["name", "occupation", "price"];
-const freelancerOptions = {
+const freelancerOptions = { // options for randomizer
   name: [
     "Alex", "Alice", 
     "Betty", "Bob", 
@@ -15,19 +15,18 @@ const freelancerOptions = {
     "Wesley"],
   lastName: ["Berkley", "Bradford", "Cooper", "Doe", "Frumpkin", "Garfunkle", "Gibson", "Smith"],
   occupation: ["Writer", "Teacher", "Programmer", "Musician", "Painter", "Actor", "Trainer", "Clown", "Landscaper"],
-  price: [15, 250],
+  price: [15, 250], // min, max(inclusive)
 };
 const freelancers = [];
-const maxFreelancers = 20;
+const maxFreelancers = 25;
+const numUniqueNameCombinations = freelancerOptions.name.length * freelancerOptions.lastName.length;
 
 // References
+const averagePriceNode = document.querySelector("#averagePrice");
 const unorderedLists = {};
 for(key of stateKeys) {
   const ul = document.querySelector(`#freelancer${capitalize(key)}s > ul`);
-  if (!ul) {
-    console.log(`Couldn't find section > ul for key ${key}`);
-    continue;
-  }
+  if (!ul) continue;
 
   unorderedLists[key] = ul;
 }
@@ -64,7 +63,7 @@ function randomElement(array) {
 
 /**
  * Replaces elements under a given node with new elements derived from given contents and tag
- * @param {Node} node to add new html elements to
+ * @param {Node} node to add new DOM elements to
  * @param {Array} contents to fill each element with
  * @param {string} tag (html) for element creation
  */
@@ -78,7 +77,7 @@ function replaceChildren(node, contents, tag) {
   node.replaceChildren(...elements);
 }
 
-/** Translates javascript data into html in order to display on page */
+/** Translates javascript data into html, then adds it to DOM in order to display on page */
 function render() {
   for(key in unorderedLists) {
     const contents = [];
@@ -93,14 +92,34 @@ function render() {
 }
 
 /**
- * Generate a randomized string in the format of "FirstName LastName", both taken from freelancerOptions.name 
+ * @returns {number} average price as an integer
+ */
+function calculateAveragePrice() {
+  if (freelancers.length < 1) return 0;
+
+  const totalPrice = freelancers.reduce((sum, freelancer) => sum + freelancer.price, 0);
+  return Math.round(totalPrice / freelancers.length);
+}
+
+/**
+ * Takes the newly calculated average price and inserts it into the relevant DOM string
+ */
+function updateAveragePrice() {
+  const prevText = averagePriceNode.textContent;
+  const samePrefix = prevText.slice(0, prevText.indexOf("$")+1); // up to $, which is a unique character in this string
+  averagePriceNode.textContent = samePrefix + calculateAveragePrice() + '.'; // '.' is simple enough that readding it is easier than trying to slice or save a suffix
+}
+
+/**
+ * Generate a randomized string in the format of "FirstName LastName", taken from freelancerOptions .name & .lastName
  * Note: tries to be unique relative to freelancers[every].name, but is not guaranteed
  * @returns {string} randomized string
  */
 function generateUniqueFreelancerName() {
   let tryRandomName;
+  const maxTries = (freelancers.length >= numUniqueNameCombinations) ? 1 : numUniqueNameCombinations * 2;
 
-  for(let i=0; i < 100; i++) {
+  for(let i=0; i < maxTries; i++) {
     // generate
     tryRandomName = `${randomElement(freelancerOptions.name)} ${randomElement(freelancerOptions.lastName)}`;
     // check uniqueness
@@ -129,6 +148,7 @@ function addFreeLancers(amount) {
 
     freelancers.push(generateFreelancer());
   }
+  updateAveragePrice();
   render();
 }
 
