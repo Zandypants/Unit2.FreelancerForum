@@ -7,20 +7,17 @@ const freelancerOptions = {
 const freelancers = [];
 const maxFreelancers = 20;
 
-console.log(freelancers);
-
 // References
 const unorderedLists = {};
 for(key in freelancerOptions) {
   const ul = document.querySelector(`#freelancer${capitalize(key)}s > ul`);
   if (!ul) {
-    console.log(`Couldn't find section > list for key ${key}`);
+    console.log(`Couldn't find section > ul for key ${key}`);
     continue;
   }
 
   unorderedLists[key] = ul;
 }
-console.log(unorderedLists);
 
 // Init page
 addFreeLancers(2);
@@ -91,7 +88,6 @@ function generateUniqueFreelancerName() {
     if (!freelancers.find(obj => obj.name === tryRandomName)) break;
   }
 
-  console.log(`name generated: ${tryRandomName}`);
   return tryRandomName;
 }
 
@@ -102,8 +98,6 @@ function generateFreelancer() {
   freelancer.occupation = freelancerOptions.occupation[randomInt(0,freelancerOptions.occupation.length)];
   freelancer.price = randomInt(freelancerOptions.price[0], freelancerOptions.price[1]+1); // +1 makes max inclusive
 
-  console.log(`freelancer generated:`);
-  console.table(freelancer);
   return freelancer;
 }
 
