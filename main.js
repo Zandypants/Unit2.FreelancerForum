@@ -1,4 +1,4 @@
-/* State */
+// State
 const freelancerOptions = {
   name: ["Alice", "Bob", "Carol", "Jack", "Mike"],
   occupation: ["Writer", "Teacher", "Programmer","Musician", "Painter",],
@@ -9,6 +9,7 @@ const maxFreelancers = 20;
 
 console.log(freelancers);
 
+// References
 const unorderedLists = {};
 for(key in freelancerOptions) {
   const ul = document.querySelector(`#freelancer${capitalize(key)}s > ul`);
@@ -21,8 +22,11 @@ for(key in freelancerOptions) {
 }
 console.log(unorderedLists);
 
+// Init page
 addFreeLancers(2);
-render();
+
+// Update page
+const intervalID = setInterval(addFreeLancer, 3000);
 
 /**
  * Returns a copy of the input word with the first letter capitalized
@@ -37,7 +41,7 @@ function capitalize(word) {
   return word[0].toUpperCase() + word.slice(1);
 }
 
-function random(min, max) {
+function randomInt(min, max) {
   // validation TODO
   return Math.floor(Math.random() * (max - min) + min); // max inclusive
 }
@@ -79,7 +83,7 @@ function render() {
 function generateUniqueFreelancerName() {
   let tryRandomName;
 
-  const randomName = () => freelancerOptions.name[random(0,freelancerOptions.name.length)];
+  const randomName = () => freelancerOptions.name[randomInt(0,freelancerOptions.name.length)];
   for(let i=0; i < 100; i++) {
     // generate
     tryRandomName = `${randomName()} ${randomName()}`;
@@ -95,8 +99,8 @@ function generateFreelancer() {
   const freelancer = {};
   
   freelancer.name = generateUniqueFreelancerName();
-  freelancer.occupation = freelancerOptions.occupation[random(0,freelancerOptions.occupation.length)];
-  freelancer.price = random(freelancerOptions.price[0], freelancerOptions.price[1]+1); // +1 makes max inclusive
+  freelancer.occupation = freelancerOptions.occupation[randomInt(0,freelancerOptions.occupation.length)];
+  freelancer.price = randomInt(freelancerOptions.price[0], freelancerOptions.price[1]+1); // +1 makes max inclusive
 
   console.log(`freelancer generated:`);
   console.table(freelancer);
@@ -105,8 +109,16 @@ function generateFreelancer() {
 
 function addFreeLancers(amount) {
   for (let i = 0; i < amount; i++) {
-    if (freelancers.length >= maxFreelancers) return;
+    if (freelancers.length >= maxFreelancers) {
+      clearInterval(intervalID);
+      return;
+    }
 
     freelancers.push(generateFreelancer());
   }
+  render();
+}
+
+function addFreeLancer() {
+  addFreeLancers(1);
 }
