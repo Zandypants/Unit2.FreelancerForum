@@ -3,6 +3,50 @@ body {
   color: #008170;
 }
 
+body > section {
+  margin: 2vh 0;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 1300;
+}
+
+h2 {
+  margin-top: 0.8rem;
+  padding: 0;
+}
+
+p {
+  margin: 0.5em;
+}
+
+ul {
+  padding: 0.3rem;
+}
+
 li {
   list-style: none;
+}
+
+.bordered {
+  border: #008170 1px solid;
+}
+
+.containerCentered {
+  display: flex;
+  justify-content: center;
+}
+
+.containerColumn,
+#freelancers > section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+  padding: 0.8rem;
+}
+
+#freelancerPrices li {
+  text-align: right;
 }

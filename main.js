@@ -87,7 +87,8 @@ function render() {
       if (key === "price") contents[i] = "$" + contents[i];
     }
 
-    replaceChildren(unorderedLists[key], contents, "li");
+    const tag = "li";
+    replaceChildren(unorderedLists[key], contents, tag);
   }
 }
 
