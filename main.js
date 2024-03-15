@@ -1,7 +1,20 @@
 // State
+const stateKeys = ["name", "occupation", "price"];
 const freelancerOptions = {
-  name: ["Alice", "Bob", "Carol", "Jack", "Mike"],
-  occupation: ["Writer", "Teacher", "Programmer","Musician", "Painter",],
+  name: [
+    "Alex", "Alice", 
+    "Betty", "Bob", 
+    "Carl", "Carol", 
+    "Damian", "Donna", 
+    "Egor", "Emma", 
+    "Jack", "Jess", 
+    "Noah", "Natalie", 
+    "Mia", "Mike", 
+    "Sam", "Simon", 
+    "Tammy", "Tom", 
+    "Wesley"],
+  lastName: ["Berkley", "Bradford", "Cooper", "Doe", "Frumpkin", "Garfunkle", "Gibson", "Smith"],
+  occupation: ["Writer", "Teacher", "Programmer", "Musician", "Painter", "Actor", "Trainer", "Clown", "Landscaper"],
   price: [15, 250],
 };
 const freelancers = [];
@@ -9,7 +22,7 @@ const maxFreelancers = 20;
 
 // References
 const unorderedLists = {};
-for(key in freelancerOptions) {
+for(key of stateKeys) {
   const ul = document.querySelector(`#freelancer${capitalize(key)}s > ul`);
   if (!ul) {
     console.log(`Couldn't find section > ul for key ${key}`);
@@ -40,7 +53,13 @@ function capitalize(word) {
 
 function randomInt(min, max) {
   // validation TODO
-  return Math.floor(Math.random() * (max - min) + min); // max inclusive
+  return Math.floor(Math.random() * (max - min) + min);
+}
+function randomElement(array) {
+  // validation
+  if (!Array.isArray(array)) return null;
+
+  return array[randomInt(0,array.length)];
 }
 
 /**
@@ -80,10 +99,9 @@ function render() {
 function generateUniqueFreelancerName() {
   let tryRandomName;
 
-  const randomName = () => freelancerOptions.name[randomInt(0,freelancerOptions.name.length)];
   for(let i=0; i < 100; i++) {
     // generate
-    tryRandomName = `${randomName()} ${randomName()}`;
+    tryRandomName = `${randomElement(freelancerOptions.name)} ${randomElement(freelancerOptions.lastName)}`;
     // check uniqueness
     if (!freelancers.find(obj => obj.name === tryRandomName)) break;
   }
@@ -95,7 +113,7 @@ function generateFreelancer() {
   const freelancer = {};
   
   freelancer.name = generateUniqueFreelancerName();
-  freelancer.occupation = freelancerOptions.occupation[randomInt(0,freelancerOptions.occupation.length)];
+  freelancer.occupation = randomElement(freelancerOptions.occupation);
   freelancer.price = randomInt(freelancerOptions.price[0], freelancerOptions.price[1]+1); // +1 makes max inclusive
 
   return freelancer;
