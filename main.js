@@ -1,18 +1,16 @@
 /* State */
-
-let freelancersDisplayed = 3;
-const freelancers = [
-  { name: "Alice", occupation: "Writer", price: 30, },
-  { name: "Bob", occupation: "Teacher", price: 50, },
-  { name: "Carol", occupation: "Programmer", price: 70, },
-  { name: "Jack", occupation: "Musician", price: 20, },
-  { name: "Mike", occupation: "Painter", price: 25, },
-];
+const freelancerOptions = {
+  name: ["Alice", "Bob", "Carol", "Jack", "Mike"],
+  occupation: ["Writer", "Teacher", "Programmer","Musician", "Painter",],
+  price: [15, 250],
+};
+const freelancers = [];
+const maxFreelancers = 20;
 
 console.log(freelancers);
 
 const unorderedLists = {};
-for(key in freelancers[0]) {
+for(key in freelancerOptions) {
   const ul = document.querySelector(`#freelancer${capitalize(key)}s > ul`);
   if (!ul) {
     console.log(`Couldn't find section > list for key ${key}`);
@@ -23,12 +21,8 @@ for(key in freelancers[0]) {
 }
 console.log(unorderedLists);
 
+addFreeLancers(2);
 render();
-
-
-// const freelancerNameList = document.querySelectorAll("#freelancerNames > ul");
-// console.log(freelancerNameList);
-
 
 /**
  * Returns a copy of the input word with the first letter capitalized
@@ -41,6 +35,11 @@ function capitalize(word) {
     return "";
 
   return word[0].toUpperCase() + word.slice(1);
+}
+
+function random(min, max) {
+  // validation TODO
+  return Math.floor(Math.random() * (max - min) + min); // max inclusive
 }
 
 /**
@@ -63,11 +62,51 @@ function replaceChildren(node, contents, tag) {
 function render() {
   for(key in unorderedLists) {
     const contents = [];
-    for (let i = 0; i < freelancersDisplayed; i++) {
+    for (let i = 0; i < freelancers.length; i++) {
       contents.push(freelancers[i][key]);
       if (key === "price") contents[i] = "$" + contents[i];
     }
 
     replaceChildren(unorderedLists[key], contents, "li");
+  }
+}
+
+/**
+ * Generate a randomized string in the format of "FirstName LastName", both taken from freelancerOptions.name 
+ * Note: tries to be unique relative to freelancers[every].name, but is not guaranteed
+ * @returns {string} randomized string
+ */
+function generateUniqueFreelancerName() {
+  let tryRandomName;
+
+  const randomName = () => freelancerOptions.name[random(0,freelancerOptions.name.length)];
+  for(let i=0; i < 100; i++) {
+    // generate
+    tryRandomName = `${randomName()} ${randomName()}`;
+    // check uniqueness
+    if (!freelancers.find(obj => obj.name === tryRandomName)) break;
+  }
+
+  console.log(`name generated: ${tryRandomName}`);
+  return tryRandomName;
+}
+
+function generateFreelancer() {
+  const freelancer = {};
+  
+  freelancer.name = generateUniqueFreelancerName();
+  freelancer.occupation = freelancerOptions.occupation[random(0,freelancerOptions.occupation.length)];
+  freelancer.price = random(freelancerOptions.price[0], freelancerOptions.price[1]+1); // +1 makes max inclusive
+
+  console.log(`freelancer generated:`);
+  console.table(freelancer);
+  return freelancer;
+}
+
+function addFreeLancers(amount) {
+  for (let i = 0; i < amount; i++) {
+    if (freelancers.length >= maxFreelancers) return;
+
+    freelancers.push(generateFreelancer());
   }
 }
